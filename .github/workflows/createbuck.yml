@@ -1,0 +1,25 @@
+# This is a basic workflow to help you get started with Actions
+name: createbuckets3
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  # push:
+  #  branches: [ main ]
+# Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+# This workflow contains a single job called "build"
+  build:
+# The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Upload to S3
+        run: |
+          aws s3 mb s3://gauravmankarrr
+        env:
+          AWS_ACCESS_KEY_ID: ASIASEX72AZTZE34TBHY
+          AWS_SECRET_ACCESS_KEY: 8YAhoDFD0Pv4eIh7FFu5fM37/e/m2Amo8ytyCWWO
+          AWS_DEFAULT_REGION: 'us-east-1'
+          AWS_SESSION_TOKEN: FwoGZXIvYXdzEHcaDH5ZgSEKleloyAcD+iLKAWEes5022bh2MAlv003Ja7cTCP6TwNkalol+YAwVf/JXwHd9grc+je11Z87AyhIGWunZu2ttNRzKUuop1XH1qxMiZDQiRwnY1qVPPsKmyNWeDHyun4kK5W0Rxo2WjC/hoJmdNor7aD4wMbSa9ylmrT6k/USIqtGp99VWTXg17MlQpfV1RAPyEIMrjbHgXIBFfStX6dyx17YRyJb7+Qiwkp9a43C6UrePqT9cme4Eo4nFR8uzGy7gNeybeImA5HqyHvDsYLAANFMbH38ojebRoAYyLZyEJermVTctAfxbC4zJ9bsudVP0w3wRW6u1f3iTu6c2fxxfeIWqZV3Z31RRgw==
