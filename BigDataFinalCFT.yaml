@@ -3,7 +3,7 @@ Description: "TEST for S3 infrastructure"
 Parameters:
   S3BucketName:
     Type: String
-    Default: instagraminput1
+    Default: uploadpy1212
 
 Resources:
 
@@ -44,7 +44,7 @@ Resources:
   MyS3Bucket2:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: instagramoutput1
+      BucketName: gauravbigout
             
   MyS3Bucket2Policy:
     Type: AWS::S3::BucketPolicy
@@ -63,7 +63,7 @@ Resources:
       FunctionName: myS3Trigger
       Handler: index.lambda_handler
       Runtime: python3.8
-      Role: arn:aws:iam::374710540470:role/LabRole
+      Role: arn:aws:iam::147639109223:role/LabRole
       Code:
         ZipFile: |
           import json
@@ -73,7 +73,7 @@ Resources:
               if event:
                   bucket_name = event['Records'][0]['s3']['bucket']['name']
                   key = event['Records'][0]['s3']['object']['key']
-                  if bucket_name == 'instagraminput1':
+                  if bucket_name == 'uploadpy1212':
                       glue = boto3.client('glue')
                       response = glue.start_trigger(Name='StartTrigger1')
                       print(response)
@@ -90,7 +90,7 @@ Resources:
       Role: 'LabRole'   
       Command:   
         Name: glueetl
-        ScriptLocation: !Sub 's3://instagraminput1/normalized_script.py'
+        ScriptLocation: !Sub 's3://uploadpy1212/test1.py'
       AllocatedCapacity: 5  
       ExecutionProperty:   
         MaxConcurrentRuns: 2  
@@ -101,41 +101,14 @@ Resources:
     Type: AWS::Glue::Crawler
     Properties:
       Name: locationcraw111
-      Role: arn:aws:iam::374710540470:role/LabRole
+      Role: arn:aws:iam::147639109223:role/LabRole
       Targets:
         S3Targets:
-          - Path: s3://instagramoutput1/locations.parquet
+          - Path: s3://gauravbigout/
       DatabaseName: demo
       SchemaChangePolicy:
         UpdateBehavior: UPDATE_IN_DATABASE
         DeleteBehavior: DEPRECATE_IN_DATABASE
-
-  MyCrawler2:
-    Type: AWS::Glue::Crawler
-    Properties:
-      Name: postcraw111
-      Role: arn:aws:iam::374710540470:role/LabRole
-      Targets:
-        S3Targets:
-          - Path: s3://instagramoutput1/posts.parquet
-      DatabaseName: demo
-      SchemaChangePolicy:
-        UpdateBehavior: UPDATE_IN_DATABASE
-        DeleteBehavior: DEPRECATE_IN_DATABASE
-
-  MyCrawler3:
-    Type: AWS::Glue::Crawler
-    Properties:
-      Name: profilecraw111
-      Role: arn:aws:iam::374710540470:role/LabRole
-      Targets:
-        S3Targets:
-          - Path: s3://instagramoutput1/profiles.parquet
-      DatabaseName: demo
-      SchemaChangePolicy:
-        UpdateBehavior: UPDATE_IN_DATABASE
-        DeleteBehavior: DEPRECATE_IN_DATABASE
-
 
   MyWorkflow:
     Type: AWS::Glue::Workflow
@@ -157,44 +130,12 @@ Resources:
   LocationTrigger:
     Type: AWS::Glue::Trigger
     Properties:
-      Name: 'LocationJobSuccessfulTrigger'
+      Name: 'JobSuccessfulTrigger'
       Type: CONDITIONAL
       StartOnCreation: TRUE
       Description: 'Trigger to start the crawler'
       Actions:
         - CrawlerName: !Ref MyCrawler1
-      Predicate:
-        Conditions:
-          - LogicalOperator: EQUALS
-            JobName: !Ref GlueJob
-            State: SUCCEEDED
-      WorkflowName: !Ref MyWorkflow
-
-  PostTrigger:
-    Type: AWS::Glue::Trigger
-    Properties:
-      Name: 'PostJobSuccessfulTrigger'
-      Type: CONDITIONAL
-      StartOnCreation: TRUE
-      Description: 'Trigger to start the crawler'
-      Actions:
-        - CrawlerName: !Ref MyCrawler2
-      Predicate:
-        Conditions:
-          - LogicalOperator: EQUALS
-            JobName: !Ref GlueJob
-            State: SUCCEEDED
-      WorkflowName: !Ref MyWorkflow
-
-  ProfileTrigger:
-    Type: AWS::Glue::Trigger
-    Properties:
-      Name: 'ProfileJobSuccessfulTrigger'
-      Type: CONDITIONAL
-      StartOnCreation: TRUE
-      Description: 'Trigger to start the crawler'
-      Actions:
-        - CrawlerName: !Ref MyCrawler3
       Predicate:
         Conditions:
           - LogicalOperator: EQUALS
