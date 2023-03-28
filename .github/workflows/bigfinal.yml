@@ -1,0 +1,36 @@
+name: 'Deploy to AWS CloudFormation'
+on: 
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+jobs:
+  # This workflow contains a single job called "deploy"
+  deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ASIASEX72AZT4OMZGGNR
+          aws-secret-access-key: WnyQv4vapuD5bbkyRV4M/5fE1zDPxIEj//cnfSHR
+          aws-session-token: FwoGZXIvYXdzEIT//////////wEaDO0gKGFuz1GxPMzn2SLKAT5lcYMeeAzR+MrnrAxG7kWWxlAc431p37srJG72dCetd84s4Xri7ImplgYIyyiYFHQGJY8eB2mhLe2G7N26b/8fcWgTM6AaPOLC7+R92n9HjIBQIBlIpo1DMrap+uwstEkXHLCbSpaLmofK96XlfpC1aTw4Nj1ndlGf72mCN83xhVVo3P9bhc3vzLOzUzNeIZO9U84CY2kosxtuFk8+Tz3FPTixs2pURTYJqQvyL7Sus5sM70S9l0qz1wKYIvnmwsd6LyE1fLZJXsoou+KMoQYyLcwvdk/jDQTGzpMH/+hujgtRYijo3WD5i64V4Kzu5lq2kxGNcn/+S22U4YTzHw==
+          aws-region: 'us-east-1' 
+
+      # Deploy to AWS CloudFormation
+      - name: Deploy to AWS CloudFormation
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: test-stack
+          template: BigDataFinalCFT.yaml
+          no-fail-on-empty-changeset: "1"
+        
